@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-3.2.xsd  
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<context:component-scan base-package="com.api.jockey"></context:component-scan>
+	
+	<mvc:annotation-driven></mvc:annotation-driven>
+	
+<!-- 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy> -->
+	
+<!-- 	<bean id="productoService" class="com.api.jockey.service.impl.ProductoServiceImpl"/> -->
+	
+	<!-- 
+	<bean id="viewResolver"
+		  class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+			<property name="prefix" value="/WEB-INF/Views/" />
+			<property name="suffix" value=".jsp" />
+	</bean>
+	
+	
+	<bean id="messageSource"
+	class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>WEB-INF/account</value>
+			</list>
+		</property>
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+	 -->
+	
+<!-- 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" -->
+<!-- 		destroy-method="close"> -->
+
+<!-- 		<property name="driverClass" value="com.mysql.jdbc.Driver" /> -->
+<!-- 		<property name="jdbcUrl" -->
+<!-- 			value="jdbc:mysql://localhost:3306/psbankdb?useSSL=false" /> -->
+<!-- 		<property name="user" value="root" /> -->
+<!-- 		<property name="password" value="root" /> -->
+<!-- 	</bean> -->
+
+	<bean id="dataSource" class="oracle.jdbc.pool.OracleDataSource"
+		destroy-method="close">
+		<property name="URL" value="jdbc:oracle:thin:@//localhost:1521/xe" />
+        <property name="user" value="DBJOCKEY"/>
+        <property name="password" value="DBJOCKEY"/>
+        <property name="connectionCachingEnabled" value="true"/>
+    </bean>
+
+
+	<bean id="sessionFactory"
+		class=" org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="com.api.jockey" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+
+<!-- 	<bean id="myTransactionManager" -->
+<!-- 		class="org.springframework.orm.hibernate5.HibernateTransactionManager"> -->
+<!-- 		<property name="sessionFactory" ref="sessionFactory" /> -->
+<!-- 	</bean> -->
+	
+<!-- 	<tx:annotation-driven transaction-manager="myTransactionManager" /> -->
+
+   <bean id="myEmf"
+     class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+       <property name="dataSource" ref="dataSource" />
+       <property name="packagesToScan" value="com.api.jockey" />
+       <property name="jpaVendorAdapter">
+           <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+       </property>
+       <property name="jpaProperties">
+          <props>
+              <prop key="hibernate.hbm2ddl.auto">create-drop</prop>
+             <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+          </props>
+       </property>
+   </bean>
+ 
+   <bean id="transactionManager"
+     class="org.springframework.orm.jpa.JpaTransactionManager">
+       <property name="entityManagerFactory" ref="myEmf" />
+   </bean>
+   <tx:annotation-driven />
+ 
+   <bean id="persistenceExceptionTranslationPostProcessor" class=
+     "org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+	
+
+</beans>
