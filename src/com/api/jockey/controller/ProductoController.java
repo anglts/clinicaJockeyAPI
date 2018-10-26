@@ -41,7 +41,7 @@ public class ProductoController {
 		if (productos == null) {
 			return new ResponseEntity<List<Producto>>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<List<Producto>>(productos, HttpStatus.FOUND);
+		return new ResponseEntity<List<Producto>>(productos, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/getProducto/{codProducto}", method = RequestMethod.GET)
